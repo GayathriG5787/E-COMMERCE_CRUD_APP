@@ -1,0 +1,410 @@
+# PHASE 1 - PROJECT SETUP
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+## Objective
+
+Set up the foundation of the Full Stack E-commerce Clothes application using the technology stack defined in AGENT.md.
+
+This phase is ONLY for project setup.
+
+Do NOT implement:
+
+* Authentication
+* Product CRUD
+* Cart
+* Admin Dashboard
+* Middleware
+* API business logic
+
+Only prepare the project structure and configuration.
+
+---
+
+## Technology Stack
+
+Use ONLY:
+
+* Next.js 15 (App Router)
+* TypeScript
+* Tailwind CSS v4
+* Shadcn UI
+* Redux Toolkit
+* MongoDB Atlas
+* Mongoose
+* Axios
+
+Use stable versions compatible with:
+
+* Next.js 15
+* React 19
+* Tailwind CSS v4
+
+Follow AGENT.md version stability rules.
+
+---
+
+## Folder Structure
+
+Create and organize the project exactly as:
+
+```txt
+src/
+
+app/
+
+components/
+
+components/ui/
+
+lib/
+
+models/
+
+store/
+
+schemas/
+
+hooks/
+
+utils/
+
+middleware.ts
+```
+
+Inside app:
+
+```txt
+app/
+
+login/
+
+register/
+
+products/
+
+[id]/
+
+cart/
+
+admin/
+
+dashboard/
+
+products/
+
+users/
+
+api/
+```
+
+Create empty pages if required.
+
+Do not implement business logic.
+
+---
+
+## Configure Tailwind CSS
+
+Set up:
+
+* Tailwind CSS v4
+* globals.css
+* Tailwind imports
+* Tailwind configuration according to official documentation
+
+Do not use outdated setup steps.
+
+---
+
+## Configure Shadcn UI
+
+Configure:
+
+* Shadcn UI using the official documentation.
+* Tailwind v4 compatible setup.
+* Proper aliases.
+
+Install ONLY after confirming compatibility with the existing stack.
+
+---
+
+## Global CSS
+
+Create:
+
+```txt
+src/app/globals.css
+```
+
+Define:
+
+```css
+:root {
+
+--background:
+
+--foreground:
+
+--primary:
+
+--secondary:
+
+--muted:
+
+--success:
+
+--destructive:
+
+--border:
+
+--card:
+
+}
+```
+
+Use the colors defined in AGENT.md.
+
+Create reusable classes:
+
+```css
+.btn-primary
+
+.page-container
+
+.card-container
+
+.input-field
+
+.section-title
+```
+
+Avoid repeating long Tailwind utility combinations throughout the project.
+
+---
+
+## MongoDB Configuration
+
+Create:
+
+```txt
+lib/mongodb.ts
+```
+
+Requirements:
+
+* Single connection pattern
+* Reuse existing connection
+* Avoid reconnecting on every request
+* Use Mongoose
+* Read MongoDB URI from:
+
+```txt
+.env.local
+```
+
+Do NOT:
+
+* Hardcode database URLs
+* Create multiple connections
+
+---
+
+## Environment Variables
+
+Create:
+
+```txt
+.env.local
+```
+
+Include:
+
+```env
+MONGODB_URI=
+
+JWT_SECRET=
+
+NEXT_PUBLIC_API_URL=
+```
+
+Never hardcode:
+
+* Secrets
+* API Keys
+* Database URLs
+* Tokens
+
+---
+
+## Redux Setup
+
+Create:
+
+```txt
+store/
+
+index.ts
+```
+
+Prepare Redux store configuration.
+
+Create placeholder slices:
+
+```txt
+authSlice
+
+productSlice
+
+cartSlice
+```
+
+Only initial structure.
+
+Do NOT implement actions or API integration yet.
+
+---
+
+## Axios Configuration
+
+Create:
+
+```txt
+lib/axios.ts
+```
+
+Configure:
+
+* Base URL
+* Credentials support
+
+Read API URL from:
+
+```env
+NEXT_PUBLIC_API_URL
+```
+
+Do not hardcode URLs.
+
+---
+
+## App Layout
+
+Prepare:
+
+```txt
+app/layout.tsx
+```
+
+Requirements:
+
+* Import globals.css
+* Configure fonts if needed
+* Add Providers wrapper
+* Keep layout minimal
+
+Do not add business components.
+
+---
+
+## Providers
+
+Create:
+
+```txt
+components/providers.tsx
+```
+
+Responsibilities:
+
+* Redux Provider
+
+Only include providers required in this phase.
+
+---
+
+## Images / Assets
+
+If demo images are needed:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Store images as:
+
+```ts
+image: "https://..."
+```
+
+Do NOT:
+
+* Upload local images
+* Store images in public folder unless explicitly requested
+* Implement image uploads
+
+---
+
+## Code Quality Rules
+
+Always:
+
+* Use TypeScript
+* Use explicit types
+* Use async/await
+* Use descriptive names
+* Keep functions small
+* Prefer simple code
+* Prefer readability
+
+Avoid:
+
+* any
+* Clever abstractions
+* Generic factories
+* Overengineering
+* Premature optimization
+
+---
+
+## Expected Output
+
+After Phase 1 completion:
+
+✓ Next.js 15 project configured
+
+✓ Tailwind CSS v4 configured
+
+✓ Shadcn UI configured
+
+✓ globals.css configured
+
+✓ Folder structure created
+
+✓ MongoDB connection configured
+
+✓ Redux store configured
+
+✓ Axios configured
+
+✓ Environment variables configured
+
+✓ Providers configured
+
+Project should compile successfully and be ready for Phase 2.
+
+---
+
+If any requirement is unclear:
+
+Ask the user before implementing.
+
+Do NOT assume.

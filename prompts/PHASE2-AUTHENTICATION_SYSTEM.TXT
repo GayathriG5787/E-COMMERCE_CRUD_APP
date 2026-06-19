@@ -1,0 +1,711 @@
+# PHASE 2 - AUTHENTICATION SYSTEM
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+This phase is ONLY for Authentication.
+
+Do NOT implement:
+
+* Product CRUD
+* Cart functionality
+* Admin Dashboard
+* Product pages
+* Order system
+* Real-time features
+
+Implement Authentication only.
+
+---
+
+## Objective
+
+Build a secure JWT Authentication system using:
+
+* Next.js 15 App Router
+* TypeScript
+* MongoDB Atlas
+* Mongoose
+* JWT
+* bcryptjs
+* httpOnly Cookies
+* Zod Validation
+
+Authentication must support:
+
+* Register
+* Login
+* Logout
+* Get Current User
+* Role based access preparation
+
+---
+
+## Features Included
+
+### User Registration
+
+User can register using:
+
+```txt
+Name
+
+Email
+
+Password
+```
+
+Requirements:
+
+* Name is required
+* Email is required
+* Email must be valid
+* Password is required
+* Password minimum 6 characters
+
+Before creating user:
+
+* Check if email already exists.
+* Return proper error if already registered.
+
+Password:
+
+* Hash using bcryptjs.
+* Never store plain text passwords.
+
+---
+
+### User Login
+
+User can login using:
+
+```txt
+Email
+
+Password
+```
+
+Requirements:
+
+* Verify email exists.
+* Compare password using bcryptjs.
+* Generate JWT after successful login.
+
+Store JWT:
+
+```txt
+httpOnly Cookie
+```
+
+Do NOT:
+
+* Store JWT in localStorage.
+* Store JWT in sessionStorage.
+* Expose token to frontend.
+
+---
+
+### User Logout
+
+Logout should:
+
+* Remove authentication cookie.
+* Invalidate user session on browser.
+
+Return:
+
+```json
+{
+"success": true,
+"message": "Logged out successfully"
+}
+```
+
+---
+
+### Get Current User
+
+Create API:
+
+```txt
+GET /api/auth/me
+```
+
+Return:
+
+```ts
+{
+id,
+name,
+email,
+role
+}
+```
+
+Never return:
+
+```txt
+password
+```
+
+---
+
+# API Routes
+
+Implement:
+
+```txt
+POST /api/auth/register
+
+POST /api/auth/login
+
+POST /api/auth/logout
+
+GET /api/auth/me
+```
+
+Follow REST conventions.
+
+Do NOT create:
+
+```txt
+/SignUp
+
+/LoginUser
+
+/GetUser
+
+/UserLogin
+```
+
+---
+
+# Folder Structure
+
+Use:
+
+```txt
+src/
+
+app/
+
+api/
+
+auth/
+
+register/
+
+route.ts
+
+login/
+
+route.ts
+
+logout/
+
+route.ts
+
+me/
+
+route.ts
+```
+
+Models:
+
+```txt
+models/User.ts
+```
+
+Schemas:
+
+```txt
+schemas/
+
+registerSchema.ts
+
+loginSchema.ts
+```
+
+Utils:
+
+```txt
+utils/
+
+generateToken.ts
+```
+
+---
+
+# User Database Schema
+
+Create:
+
+```txt
+models/User.ts
+```
+
+Schema:
+
+```ts
+{
+name:string,
+
+email:string,
+
+password:string,
+
+role:"admin" | "user",
+
+createdAt:Date
+}
+```
+
+Requirements:
+
+* email should be unique
+* timestamps enabled
+* role default:
+
+```txt
+"user"
+```
+
+Do NOT:
+
+* Add unnecessary fields.
+* Add profile image.
+* Add address.
+* Add phone number.
+
+---
+
+# Zod Validation
+
+Create:
+
+```txt
+schemas/registerSchema.ts
+
+schemas/loginSchema.ts
+```
+
+Register validation:
+
+```txt
+name
+
+required
+
+minimum 2 characters
+```
+
+```txt
+email
+
+required
+
+valid email
+```
+
+```txt
+password
+
+required
+
+minimum 6 characters
+```
+
+---
+
+Login validation:
+
+```txt
+email
+
+required
+
+valid email
+```
+
+```txt
+password
+
+required
+```
+
+Return meaningful validation messages.
+
+---
+
+# JWT Rules
+
+Use:
+
+```txt
+JWT
+
+jsonwebtoken
+```
+
+Store secret in:
+
+```env
+JWT_SECRET=
+```
+
+Token payload:
+
+```ts
+{
+id,
+
+email,
+
+role
+}
+```
+
+Set expiration:
+
+```txt
+7 days
+```
+
+Create helper:
+
+```txt
+utils/generateToken.ts
+```
+
+---
+
+# Cookie Rules
+
+Store token inside:
+
+```txt
+httpOnly Cookie
+```
+
+Configuration:
+
+```txt
+httpOnly: true
+
+secure: production only
+
+sameSite: "strict"
+
+path: "/"
+```
+
+Never:
+
+* Store token in localStorage
+* Send token in frontend state
+* Expose secret
+
+---
+
+# Password Rules
+
+Use:
+
+```txt
+bcryptjs
+```
+
+Hash:
+
+```txt
+bcrypt.hash()
+```
+
+Compare:
+
+```txt
+bcrypt.compare()
+```
+
+Never:
+
+```txt
+save raw password
+```
+
+Never:
+
+```txt
+encrypt password manually
+```
+
+---
+
+# Database Rules
+
+Use:
+
+```txt
+MongoDB Atlas
+
+Mongoose
+```
+
+Connection:
+
+```txt
+lib/mongodb.ts
+```
+
+Use:
+
+Single connection pattern.
+
+Avoid:
+
+* Creating new connection every request.
+* Multiple mongoose connections.
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Return:
+
+```json
+{
+"success": false,
+"message": "Error message"
+}
+```
+
+Use status codes:
+
+```txt
+201
+
+400
+
+401
+
+404
+
+409
+
+500
+```
+
+Examples:
+
+```txt
+User already exists -> 409
+
+Invalid credentials -> 401
+
+Validation failed -> 400
+
+Server error -> 500
+```
+
+---
+
+# Role Preparation
+
+User roles:
+
+```txt
+admin
+
+user
+```
+
+Default:
+
+```txt
+user
+```
+
+Prepare role checking structure.
+
+Do NOT implement admin middleware yet.
+
+That will be implemented later.
+
+---
+
+# UI Pages
+
+Create:
+
+```txt
+/ login
+
+/ register
+```
+
+Requirements:
+
+Use:
+
+* Shadcn Form
+* Shadcn Input
+* Shadcn Button
+* React Hook Form
+* Zod Resolver
+
+Fields:
+
+Register:
+
+```txt
+Name
+
+Email
+
+Password
+```
+
+Login:
+
+```txt
+Email
+
+Password
+```
+
+Show:
+
+* Loading state
+* Validation errors
+* API errors
+
+---
+
+# State Management
+
+Prepare:
+
+```txt
+authSlice
+```
+
+State:
+
+```ts
+{
+loading,
+
+error,
+
+user,
+
+isAuthenticated
+}
+```
+
+Prepare:
+
+* login action
+* logout action
+* fetch current user
+
+Do not implement Product or Cart slices here.
+
+---
+
+# Images / Assets
+
+If illustrations are needed:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Do not:
+
+* Upload images
+* Store image files
+* Add profile picture upload
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT:
+
+* Use localStorage for JWT
+
+* Use sessionStorage for JWT
+
+* Store password in plain text
+
+* Create OAuth
+
+* Add Google Login
+
+* Add Forgot Password
+
+* Add OTP
+
+* Add Email Verification
+
+* Add Refresh Tokens
+
+* Add Session Authentication
+
+* Add Express.js
+
+Implement ONLY the requirements mentioned above.
+
+---
+
+# Expected Output
+
+After Phase 2:
+
+✓ User Registration API
+
+✓ User Login API
+
+✓ User Logout API
+
+✓ Current User API
+
+✓ JWT Authentication
+
+✓ bcrypt Password Hashing
+
+✓ httpOnly Cookie Authentication
+
+✓ Zod Validation
+
+✓ Login Page
+
+✓ Register Page
+
+✓ authSlice
+
+✓ Production ready authentication foundation
+
+If any requirement is unclear:
+
+Ask the user before implementation.
+
+Never assume.

@@ -1,0 +1,588 @@
+# PHASE 7 - MIDDLEWARE, ROUTE PROTECTION & AUTHORIZATION
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+Use:
+
+* Authentication Module from Phase 2
+* Product Module from Phase 3
+* Cart Module from Phase 5
+* Admin Dashboard from Phase 6
+
+This phase is ONLY for:
+
+* Middleware
+* Route Protection
+* JWT Verification
+* Role Based Authorization
+
+Do NOT implement:
+
+* Orders
+* Checkout
+* Payments
+* Notifications
+* Real-time features
+* Activity logs
+* OAuth
+
+Implement security and access control only.
+
+---
+
+## Objective
+
+Create a secure middleware system that:
+
+* Protects authenticated routes
+* Protects admin routes
+* Verifies JWT from httpOnly cookies
+* Redirects unauthorized users
+* Restricts APIs based on roles
+
+---
+
+# Middleware File
+
+Create:
+
+```txt
+src/middleware.ts
+```
+
+Use:
+
+* Next.js 15 Middleware
+* JWT verification
+* Cookie based authentication
+
+Follow official Next.js middleware practices.
+
+---
+
+# JWT Source
+
+Read token ONLY from:
+
+```txt
+httpOnly Cookie
+```
+
+Cookie name:
+
+```txt
+token
+```
+
+Do NOT:
+
+* Read from localStorage
+* Read from sessionStorage
+* Read token from frontend state
+* Pass token manually through UI
+
+---
+
+# Protected Routes
+
+Protect:
+
+```txt
+/ cart
+
+/ admin
+
+/ admin/dashboard
+
+/ admin/products
+
+/ admin/users
+```
+
+Unauthenticated users:
+
+Redirect:
+
+```txt
+/login
+```
+
+---
+
+# Admin Only Routes
+
+Allow:
+
+```txt
+role === "admin"
+```
+
+Protect:
+
+```txt
+/ admin/*
+
+POST /api/products
+
+PUT /api/products/[id]
+
+DELETE /api/products/[id]
+
+GET /api/users
+
+GET /api/admin/stats
+```
+
+---
+
+If:
+
+```txt
+role !== "admin"
+```
+
+Return:
+
+```txt
+403 Forbidden
+```
+
+Or redirect:
+
+```txt
+/
+```
+
+---
+
+# Public Routes
+
+Allow access without login:
+
+```txt
+/
+
+/login
+
+/register
+
+/products
+
+/products/[id]
+
+GET /api/products
+
+GET /api/products/[id]
+```
+
+---
+
+# JWT Verification
+
+Create:
+
+```txt
+utils/verifyToken.ts
+```
+
+Responsibilities:
+
+```txt
+Read token
+
+Verify signature
+
+Decode payload
+
+Return:
+
+id
+
+email
+
+role
+```
+
+Payload:
+
+```ts
+{
+
+id,
+
+email,
+
+role
+
+}
+```
+
+---
+
+# Auth Helper
+
+Create:
+
+```txt
+utils/getCurrentUser.ts
+```
+
+Responsibilities:
+
+```txt
+Read JWT cookie
+
+Verify token
+
+Return user details
+
+Return null if invalid
+```
+
+---
+
+# Middleware Logic
+
+If:
+
+```txt
+No token
+```
+
+Then:
+
+```txt
+Redirect to /login
+```
+
+---
+
+If:
+
+```txt
+Token invalid
+```
+
+Then:
+
+```txt
+Delete cookie
+
+Redirect to /login
+```
+
+---
+
+If:
+
+```txt
+Role mismatch
+```
+
+Then:
+
+```txt
+403
+
+or
+
+redirect to /
+```
+
+---
+
+# Cookie Rules
+
+Read:
+
+```txt
+token
+```
+
+Only from:
+
+```txt
+httpOnly cookies
+```
+
+Do NOT:
+
+```txt
+Store token in localStorage
+
+Store token in sessionStorage
+
+Expose JWT in Redux
+```
+
+---
+
+# Route Matcher
+
+Protect routes using:
+
+```txt
+matcher
+```
+
+Include:
+
+```txt
+/ cart/:path*
+
+/ admin/:path*
+```
+
+Avoid protecting:
+
+```txt
+/ products
+
+/ login
+
+/ register
+
+/_next
+
+/favicon.ico
+```
+
+---
+
+# API Protection
+
+Protect:
+
+```txt
+POST /api/products
+
+PUT /api/products/[id]
+
+DELETE /api/products/[id]
+
+GET /api/users
+
+GET /api/admin/stats
+
+GET /api/cart
+
+POST /api/cart
+
+PUT /api/cart
+
+DELETE /api/cart/[productId]
+```
+
+---
+
+# Authorization Rules
+
+User:
+
+Can:
+
+```txt
+View Products
+
+View Product Details
+
+Manage Own Cart
+```
+
+Cannot:
+
+```txt
+Manage Products
+
+Access Admin
+
+View Users
+```
+
+---
+
+Admin:
+
+Can:
+
+```txt
+Manage Products
+
+View Users
+
+Access Admin Dashboard
+
+View Statistics
+
+Manage Cart (if needed)
+```
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try {
+
+}catch(error){
+
+}
+```
+
+Return:
+
+```json
+{
+
+success:false,
+
+message:"Unauthorized"
+
+}
+```
+
+Status Codes:
+
+```txt
+401 -> Not Logged In
+
+403 -> Forbidden
+
+500 -> Server Error
+```
+
+---
+
+# Logging
+
+For development:
+
+You may:
+
+```txt
+console.error()
+
+console.log()
+```
+
+For production:
+
+Avoid:
+
+```txt
+Exposing tokens
+
+Exposing secrets
+
+Exposing passwords
+```
+
+---
+
+# Security Rules
+
+Always:
+
+* Verify JWT signature
+* Verify expiration
+* Verify role
+* Use httpOnly cookie
+* Use secure cookie in production
+* Delete invalid cookies
+
+Never:
+
+* Trust frontend role
+* Trust request body role
+* Expose JWT payload directly
+* Store secrets in frontend
+
+---
+
+# Environment Variables
+
+Use:
+
+```env
+JWT_SECRET=
+```
+
+Read from:
+
+```txt
+.env.local
+```
+
+Never hardcode secrets.
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Refresh Tokens
+
+* OAuth
+
+* Google Login
+
+* Facebook Login
+
+* OTP
+
+* Email Verification
+
+* Session Authentication
+
+* Redis Sessions
+
+* Activity Tracking
+
+* Audit Logs
+
+Implement ONLY:
+
+Middleware
+
+JWT Verification
+
+Route Protection
+
+Role Authorization
+
+---
+
+# Expected Output
+
+After Phase 7:
+
+✓ middleware.ts
+
+✓ JWT Verification Utility
+
+✓ Current User Helper
+
+✓ Protected Cart Routes
+
+✓ Protected Admin Routes
+
+✓ Protected APIs
+
+✓ Role Based Authorization
+
+✓ Unauthorized Redirects
+
+✓ Secure Authentication Flow
+
+✓ Production Ready Route Protection
+
+If any requirement is unclear:
+
+Ask the user before implementation.
+
+Never assume.

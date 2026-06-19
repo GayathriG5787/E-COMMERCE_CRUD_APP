@@ -1,0 +1,882 @@
+# PHASE 5 - CART MODULE (FRONTEND + BACKEND)
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+Use the Authentication module from Phase 2.
+
+Use the Product module from Phase 3 and Phase 4.
+
+This phase is ONLY for Cart functionality.
+
+Do NOT implement:
+
+* Checkout
+* Orders
+* Payment Gateway
+* Wishlist
+* Coupons
+* Shipping
+* Order History
+* Real-time cart updates
+* Socket.io
+
+Implement Cart only.
+
+---
+
+## Objective
+
+Build a complete Cart Module where authenticated users can:
+
+* Add products to cart
+* View cart
+* Increase quantity
+* Decrease quantity
+* Remove items from cart
+* See total price
+* See total quantity
+
+The cart should persist in MongoDB.
+
+---
+
+# Authentication Requirement
+
+Cart is a protected feature.
+
+Only:
+
+```txt
+Authenticated Users
+```
+
+can:
+
+* Add to cart
+* View cart
+* Remove from cart
+* Update quantity
+
+Unauthenticated users:
+
+Redirect to:
+
+```txt
+/ login
+```
+
+or return:
+
+```txt
+401 Unauthorized
+```
+
+---
+
+# Cart Database Schema
+
+Create:
+
+```txt
+models/Cart.ts
+```
+
+Schema:
+
+```ts
+{
+user:ObjectId,
+
+items:[
+
+{
+
+product:ObjectId,
+
+quantity:number
+
+}
+
+]
+}
+```
+
+Requirements:
+
+* user references User collection
+* product references Product collection
+* quantity minimum 1
+* timestamps enabled
+
+---
+
+# Folder Structure
+
+Create:
+
+```txt
+models/
+
+Cart.ts
+
+
+app/api/cart/
+
+route.ts
+
+
+app/api/cart/[productId]/
+
+route.ts
+
+
+components/
+
+CartDrawer.tsx
+
+CartItem.tsx
+
+CartSummary.tsx
+
+
+store/
+
+cartSlice.ts
+```
+
+Follow the existing folder structure.
+
+---
+
+# Cart API Routes
+
+Implement:
+
+```txt
+GET /api/cart
+
+POST /api/cart
+
+PUT /api/cart
+
+DELETE /api/cart/[productId]
+```
+
+Follow REST conventions.
+
+Do NOT create:
+
+```txt
+addToCart
+
+removeItem
+
+getCartItems
+
+deleteCartItem
+```
+
+---
+
+# GET CART
+
+Endpoint:
+
+```txt
+GET /api/cart
+```
+
+Requirements:
+
+Return:
+
+```ts
+{
+
+success:true,
+
+data:{
+
+items:[
+
+{
+
+product,
+
+quantity
+
+}
+
+],
+
+totalItems,
+
+totalPrice
+
+}
+
+}
+```
+
+Populate:
+
+```txt
+product
+```
+
+Return:
+
+```txt
+title
+
+price
+
+discount
+
+image
+
+stock
+```
+
+---
+
+# ADD TO CART
+
+Endpoint:
+
+```txt
+POST /api/cart
+```
+
+Request:
+
+```json
+{
+
+productId:"",
+
+quantity:1
+
+}
+```
+
+Requirements:
+
+If product already exists:
+
+```txt
+Increase quantity
+```
+
+Else:
+
+```txt
+Add new item
+```
+
+Before adding:
+
+Check:
+
+```txt
+Product exists
+
+Stock available
+```
+
+Return:
+
+```json
+{
+
+success:true,
+
+message:"Product added to cart"
+
+}
+```
+
+---
+
+# UPDATE CART QUANTITY
+
+Endpoint:
+
+```txt
+PUT /api/cart
+```
+
+Request:
+
+```json
+{
+
+productId:"",
+
+quantity:2
+
+}
+```
+
+Requirements:
+
+Update quantity.
+
+If:
+
+```txt
+quantity <= 0
+```
+
+Remove item automatically.
+
+Validate:
+
+```txt
+Available stock
+```
+
+---
+
+# REMOVE CART ITEM
+
+Endpoint:
+
+```txt
+DELETE /api/cart/[productId]
+```
+
+Requirements:
+
+Remove item from cart.
+
+Return:
+
+```json
+{
+
+success:true,
+
+message:"Item removed from cart"
+
+}
+```
+
+---
+
+# Redux Cart Slice
+
+Create:
+
+```txt
+store/cartSlice.ts
+```
+
+State:
+
+```ts
+{
+
+loading,
+
+error,
+
+items,
+
+totalItems,
+
+totalPrice
+
+}
+```
+
+Create async thunks:
+
+```txt
+fetchCart
+
+addToCart
+
+updateCartQuantity
+
+removeFromCart
+```
+
+Use:
+
+```txt
+createAsyncThunk
+```
+
+---
+
+# Cart Drawer Component
+
+Create:
+
+```txt
+components/CartDrawer.tsx
+```
+
+Responsibilities:
+
+Display:
+
+```txt
+Product Image
+
+Title
+
+Price
+
+Quantity
+
+Increase Button
+
+Decrease Button
+
+Remove Button
+
+Subtotal
+
+Total Price
+
+Checkout Button (UI ONLY)
+```
+
+Use:
+
+```txt
+Shadcn Sheet
+```
+
+Drawer should slide from:
+
+```txt
+Right Side
+```
+
+---
+
+# Cart Item Component
+
+Create:
+
+```txt
+components/CartItem.tsx
+```
+
+Display:
+
+```txt
+Image
+
+Title
+
+Price
+
+Quantity Selector
+
+Remove Button
+```
+
+Use:
+
+```txt
+Shadcn Button
+```
+
+---
+
+# Cart Summary Component
+
+Create:
+
+```txt
+components/CartSummary.tsx
+```
+
+Display:
+
+```txt
+Total Items
+
+Total Price
+
+Checkout Button
+```
+
+Example:
+
+```txt
+3 Items
+
+₹4500
+
+Proceed To Checkout
+```
+
+---
+
+# Checkout Button
+
+Create UI only.
+
+Button:
+
+```txt
+Proceed To Checkout
+```
+
+Do NOT:
+
+* Implement payment
+* Implement orders
+* Implement shipping
+
+This is UI only.
+
+---
+
+# Add To Cart Integration
+
+Connect:
+
+```txt
+ProductCard
+
+Product Detail Page
+```
+
+Button:
+
+```txt
+Add To Cart
+```
+
+Requirements:
+
+If:
+
+```txt
+User not logged in
+```
+
+Redirect:
+
+```txt
+/login
+```
+
+If:
+
+```txt
+stock === 0
+```
+
+Disable button.
+
+Show:
+
+```txt
+Out of Stock
+```
+
+---
+
+# Price Calculation
+
+Calculate:
+
+```txt
+Final Price
+
+Subtotal
+
+Total Price
+```
+
+Formula:
+
+```txt
+Final Price
+
+=
+
+price
+
+-
+
+(price × discount /100)
+```
+
+Total:
+
+```txt
+sum of all item subtotals
+```
+
+---
+
+# Loading State
+
+Use:
+
+```txt
+Shadcn Skeleton
+```
+
+While:
+
+```txt
+Loading cart
+
+Adding item
+
+Updating quantity
+
+Removing item
+```
+
+---
+
+# Empty Cart State
+
+If:
+
+```txt
+items.length === 0
+```
+
+Display:
+
+```txt
+Your Cart is Empty
+```
+
+and:
+
+```txt
+Continue Shopping
+```
+
+Button redirects:
+
+```txt
+/products
+```
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Return:
+
+```json
+{
+
+success:false,
+
+message:"Error message"
+
+}
+```
+
+Status Codes:
+
+```txt
+200
+
+201
+
+400
+
+401
+
+404
+
+500
+```
+
+---
+
+# Images
+
+Display:
+
+```ts
+image:"https://..."
+```
+
+Use:
+
+```txt
+next/image
+```
+
+If placeholders are required:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Do NOT:
+
+* Upload images
+
+* Store images locally
+
+* Use Multer
+
+---
+
+# Styling Rules
+
+Use:
+
+```txt
+Tailwind CSS
+
+Shadcn UI
+```
+
+Use existing:
+
+```txt
+.btn-primary
+
+.card-container
+
+.page-container
+```
+
+Follow:
+
+```txt
+globals.css
+```
+
+Keep:
+
+* Consistent spacing
+* Consistent typography
+* Consistent shadows
+* Consistent button styles
+
+---
+
+# Responsive Rules
+
+Support:
+
+```txt
+Mobile
+
+Tablet
+
+Desktop
+```
+
+Cart Drawer:
+
+```txt
+Mobile -> Full width
+
+Desktop -> Side drawer
+```
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Checkout Logic
+
+* Orders
+
+* Payment Gateway
+
+* Razorpay
+
+* Stripe
+
+* Coupons
+
+* Wishlist
+
+* Shipping
+
+* Order History
+
+* Socket.io
+
+* Real-time Cart
+
+Implement ONLY:
+
+Cart Database
+
+Cart APIs
+
+Redux Cart
+
+Cart UI
+
+Cart Drawer
+
+Cart Summary
+
+---
+
+# Expected Output
+
+After Phase 5:
+
+✓ Cart Mongoose Model
+
+✓ Add To Cart API
+
+✓ Get Cart API
+
+✓ Update Cart API
+
+✓ Remove Cart API
+
+✓ Redux Cart Slice
+
+✓ Cart Drawer
+
+✓ Cart Summary
+
+✓ Quantity Controls
+
+✓ Total Price Calculation
+
+✓ Responsive Cart UI
+
+✓ Production Ready Cart Module
+
+If any requirement is unclear:
+
+Ask the user before implementing.
+
+Never assume.

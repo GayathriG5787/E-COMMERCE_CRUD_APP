@@ -1,0 +1,829 @@
+# PHASE 3 - PRODUCT MODULE (DATABASE MODEL + VALIDATION + API CRUD)
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+Follow the authentication structure implemented in Phase 2.
+
+This phase is ONLY for Product Management.
+
+Do NOT implement:
+
+* Cart
+* Checkout
+* Orders
+* Payment Gateway
+* Wishlist
+* Reviews
+* Real-time stock updates
+* Search suggestions
+* Product filters
+
+Implement Product Module only.
+
+---
+
+## Objective
+
+Build a complete Product Management module using:
+
+* Next.js 15 App Router
+* TypeScript
+* MongoDB Atlas
+* Mongoose
+* Zod
+* Next.js API Routes
+
+The Product module should support:
+
+* Create Product
+* Get All Products
+* Get Product By ID
+* Update Product
+* Delete Product
+
+---
+
+# Access Rules
+
+### Admin Only
+
+Admin can:
+
+* Create Product
+* Update Product
+* Delete Product
+
+---
+
+### User
+
+User can:
+
+* View all products
+* View product details
+
+---
+
+# Product Database Schema
+
+Create:
+
+```txt
+models/Product.ts
+```
+
+Schema:
+
+```ts
+{
+title:string,
+
+description:string,
+
+price:number,
+
+discount:number,
+
+clothType:string,
+
+brand:string,
+
+size:string,
+
+color:string,
+
+stock:number,
+
+image:string,
+
+createdAt:Date,
+
+updatedAt:Date
+}
+```
+
+Enable:
+
+```ts
+timestamps:true
+```
+
+---
+
+## Field Rules
+
+### title
+
+```txt
+required
+
+minimum 3 characters
+
+maximum 100 characters
+```
+
+Example:
+
+```txt
+Men Regular Fit Cotton Shirt
+```
+
+---
+
+### description
+
+```txt
+required
+
+minimum 20 characters
+```
+
+---
+
+### price
+
+```txt
+required
+
+must be greater than 0
+```
+
+---
+
+### discount
+
+```txt
+default 0
+
+minimum 0
+
+maximum 100
+```
+
+---
+
+### clothType
+
+Examples:
+
+```txt
+Shirt
+
+T-Shirt
+
+Jeans
+
+Hoodie
+
+Jacket
+
+Pants
+```
+
+Required.
+
+---
+
+### brand
+
+Examples:
+
+```txt
+Nike
+
+Adidas
+
+Puma
+
+Levis
+```
+
+Required.
+
+---
+
+### size
+
+Store:
+
+```txt
+XS
+
+S
+
+M
+
+L
+
+XL
+
+XXL
+```
+
+Store as string.
+
+---
+
+### color
+
+Example:
+
+```txt
+Black
+
+White
+
+Blue
+
+Red
+```
+
+Store as string.
+
+---
+
+### stock
+
+```txt
+required
+
+minimum 0
+```
+
+---
+
+### image
+
+Store ONLY:
+
+```ts
+image:"https://..."
+```
+
+Example:
+
+```txt
+https://images.unsplash.com/....
+```
+
+Do NOT:
+
+* Upload images
+
+* Use multer
+
+* Store image files
+
+* Store base64 images
+
+---
+
+# Zod Validation
+
+Create:
+
+```txt
+schemas/productSchema.ts
+```
+
+Validate:
+
+```txt
+title
+
+description
+
+price
+
+discount
+
+clothType
+
+brand
+
+size
+
+color
+
+stock
+
+image
+```
+
+Rules:
+
+```txt
+title -> required
+
+price -> > 0
+
+discount -> 0 to 100
+
+stock -> >=0
+
+image -> valid URL
+```
+
+Return proper validation messages.
+
+---
+
+# API Routes
+
+Create:
+
+```txt
+GET /api/products
+
+GET /api/products/[id]
+
+POST /api/products
+
+PUT /api/products/[id]
+
+DELETE /api/products/[id]
+```
+
+Follow REST conventions.
+
+Do NOT create:
+
+```txt
+getProducts
+
+addProduct
+
+updateProduct
+
+removeProduct
+```
+
+---
+
+# GET ALL PRODUCTS
+
+Endpoint:
+
+```txt
+GET /api/products
+```
+
+Return:
+
+```json
+{
+success:true,
+
+data:[]
+}
+```
+
+Should return:
+
+```txt
+title
+
+price
+
+discount
+
+clothType
+
+brand
+
+size
+
+color
+
+stock
+
+image
+```
+
+Sort:
+
+Newest first.
+
+---
+
+# GET PRODUCT BY ID
+
+Endpoint:
+
+```txt
+GET /api/products/[id]
+```
+
+Requirements:
+
+* Validate ObjectId
+* Return 404 if product does not exist
+
+Response:
+
+```json
+{
+success:true,
+
+data:{}
+}
+```
+
+---
+
+# CREATE PRODUCT
+
+Endpoint:
+
+```txt
+POST /api/products
+```
+
+Access:
+
+```txt
+Admin only
+```
+
+Validate:
+
+```txt
+title
+
+description
+
+price
+
+discount
+
+clothType
+
+brand
+
+size
+
+color
+
+stock
+
+image
+```
+
+Create product in MongoDB.
+
+Response:
+
+```json
+{
+success:true,
+
+message:"Product created successfully",
+
+data:{}
+}
+```
+
+Status:
+
+```txt
+201
+```
+
+---
+
+# UPDATE PRODUCT
+
+Endpoint:
+
+```txt
+PUT /api/products/[id]
+```
+
+Access:
+
+```txt
+Admin only
+```
+
+Requirements:
+
+* Validate product ID
+* Validate request body
+* Update only allowed fields
+
+Response:
+
+```json
+{
+success:true,
+
+message:"Product updated successfully",
+
+data:{}
+}
+```
+
+---
+
+# DELETE PRODUCT
+
+Endpoint:
+
+```txt
+DELETE /api/products/[id]
+```
+
+Access:
+
+```txt
+Admin only
+```
+
+Requirements:
+
+* Validate product exists.
+* Delete product.
+
+Response:
+
+```json
+{
+success:true,
+
+message:"Product deleted successfully"
+}
+```
+
+---
+
+# Folder Structure
+
+Create:
+
+```txt
+models/
+
+Product.ts
+
+
+schemas/
+
+productSchema.ts
+
+
+app/api/products/
+
+route.ts
+
+
+app/api/products/[id]/
+
+route.ts
+```
+
+Follow existing project structure.
+
+Do not create unnecessary folders.
+
+---
+
+# Authorization
+
+Use Authentication created in Phase 2.
+
+Requirements:
+
+```txt
+Admin
+
+role === "admin"
+```
+
+Protect:
+
+```txt
+POST
+
+PUT
+
+DELETE
+```
+
+User can access:
+
+```txt
+GET /api/products
+
+GET /api/products/[id]
+```
+
+---
+
+# Database Rules
+
+Use:
+
+```txt
+MongoDB Atlas
+
+Mongoose
+```
+
+Connection:
+
+```txt
+lib/mongodb.ts
+```
+
+Reuse existing connection.
+
+Do NOT:
+
+* Reconnect on every request.
+* Create additional database wrappers.
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Return:
+
+```json
+{
+"success":false,
+
+"message":"Error message"
+}
+```
+
+Status codes:
+
+```txt
+200
+
+201
+
+400
+
+401
+
+403
+
+404
+
+500
+```
+
+Examples:
+
+```txt
+Invalid ID -> 400
+
+Unauthorized -> 401
+
+Forbidden -> 403
+
+Not found -> 404
+
+Server Error -> 500
+```
+
+---
+
+# Image Rule
+
+If demo products are required:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Store:
+
+```ts
+image:"https://..."
+```
+
+Do NOT:
+
+* Upload files
+
+* Use Multer
+
+* Use Cloudinary
+
+* Use ImageKit
+
+* Store files in public/
+
+---
+
+# Code Quality
+
+Always:
+
+* Use TypeScript
+
+* Use interfaces/types
+
+* Use explicit types
+
+* Use descriptive names
+
+* Use async/await
+
+* Keep functions small
+
+* Prefer readable code
+
+Avoid:
+
+* any
+
+* Complex abstractions
+
+* Generic repositories
+
+* Overengineering
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Product Reviews
+
+* Wishlist
+
+* Ratings
+
+* Categories table
+
+* Search engine
+
+* Product filters
+
+* Pagination
+
+* Infinite scroll
+
+* Real-time stock updates
+
+* File uploads
+
+* Cloudinary
+
+* Socket.io
+
+Implement ONLY Product Model, Validation, and CRUD APIs.
+
+---
+
+# Expected Output
+
+After Phase 3:
+
+✓ Product Mongoose Model
+
+✓ Product Zod Schema
+
+✓ Get All Products API
+
+✓ Get Product By ID API
+
+✓ Create Product API
+
+✓ Update Product API
+
+✓ Delete Product API
+
+✓ Admin authorization for protected routes
+
+✓ Image URL support
+
+✓ Production-ready Product Module
+
+If any requirement is unclear:
+
+Ask the user before implementing.
+
+Never assume.

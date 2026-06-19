@@ -1,0 +1,128 @@
+# PHASE 0 - GLOBAL INSTRUCTIONS
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+AGENT.md is the single source of truth for this project. Do not repeat, override, or ignore any rule defined in AGENT.md.
+
+Before implementing any feature:
+
+* Read and understand the requirement completely.
+* Review the existing codebase and project structure.
+* Implement only what is explicitly requested.
+* Preserve existing behavior and architecture.
+
+## Clarification Rule
+
+If there is:
+
+* Any ambiguity in the requirement
+* Multiple implementation choices
+* Missing business logic
+* Unclear UI/UX behavior
+* Uncertainty about architecture or folder placement
+
+STOP and ask the user before implementing.
+
+Never assume.
+
+## Existing Code Rule
+
+Do NOT:
+
+* Modify existing code without user permission.
+* Rewrite existing components without permission.
+* Change database schemas without permission.
+* Change API routes without permission.
+* Rename files or folders without permission.
+* Refactor unrelated code.
+
+Prefer extending existing code over rewriting it.
+
+Avoid breaking changes.
+
+## Image / Asset Rule
+
+If images, banners, avatars, product placeholders, or demo assets are needed:
+
+* Use public online image URLs only.
+* Prefer Unsplash.
+* Use official public assets when appropriate.
+* Store images as URL strings only.
+
+Example:
+
+```ts
+image: "https://images.unsplash.com/..."
+```
+
+Do NOT:
+
+* Upload local images.
+* Store image files inside the repository.
+* Implement image upload functionality unless explicitly requested.
+
+## Package Installation Rule
+
+Before installing ANY package:
+
+Explain:
+
+* Why the package is needed.
+* Alternatives available.
+* Compatibility with the current stack.
+* Bundle size impact.
+* Maintenance status.
+
+Then ask:
+
+"Do you want me to install this package?"
+
+Wait for user approval.
+
+Never install packages automatically.
+
+## Implementation Style
+
+Always prefer:
+
+* Simple code
+* Readable code
+* Stable implementations
+* Official documentation
+* Small functions
+* Clear variable names
+* Explicit logic
+
+Avoid:
+
+* Clever abstractions
+* Experimental APIs
+* Premature optimization
+* Overengineering
+* Unnecessary custom hooks
+* Complex patterns when a simple solution exists
+
+## Documentation Priority
+
+If there is a conflict between:
+
+* Official documentation
+* Blog posts
+* YouTube tutorials
+* Community solutions
+
+Always follow:
+
+1. Official documentation
+2. Stable implementation
+3. Most readable solution
+
+Never use hacks or deprecated approaches.
+
+## Final Rule
+
+If ANY doubt exists:
+
+Ask the user first.
+
+Never assume requirements.

@@ -1,0 +1,702 @@
+# PHASE 4 - USER PRODUCT PAGES (FRONTEND)
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+Use the APIs and Product Model created in previous phases.
+
+This phase is ONLY for User Product UI.
+
+Do NOT implement:
+
+* Cart functionality
+* Checkout
+* Orders
+* Wishlist
+* Reviews
+* Ratings
+* Search autocomplete
+* Product filters
+* Pagination
+* Admin Dashboard
+* Real-time features
+
+Implement Product UI only.
+
+---
+
+## Objective
+
+Build user-facing Product Pages using:
+
+* Next.js 15 App Router
+* TypeScript
+* Tailwind CSS v4
+* Shadcn UI
+* Axios
+* Redux Toolkit
+
+Users should be able to:
+
+* View all products
+* View product details
+* Navigate between products
+* See product information
+* See Add To Cart button (UI only)
+
+Do NOT implement cart logic yet.
+
+---
+
+# Pages To Create
+
+Create:
+
+```txt
+app/
+
+products/
+
+page.tsx
+
+
+products/[id]/
+
+page.tsx
+```
+
+---
+
+# Products Listing Page
+
+Route:
+
+```txt
+/products
+```
+
+Purpose:
+
+Display all products in a responsive grid.
+
+Fetch data from:
+
+```txt
+GET /api/products
+```
+
+---
+
+## Product Grid
+
+Requirements:
+
+Responsive:
+
+```txt
+Mobile:
+
+1 column
+
+
+Tablet:
+
+2 columns
+
+
+Desktop:
+
+3 or 4 columns
+```
+
+Use:
+
+```txt
+Tailwind Grid
+```
+
+Do not use:
+
+```txt
+Bootstrap
+
+CSS Grid libraries
+```
+
+---
+
+# Product Card Component
+
+Create:
+
+```txt
+components/ProductCard.tsx
+```
+
+Each card must contain:
+
+```txt
+Product Image
+
+Title
+
+Price
+
+Discount
+
+Cloth Type
+
+Brand
+
+Stock Status
+
+Add To Cart Button
+
+View Details Button
+```
+
+Use:
+
+```txt
+Shadcn Card
+
+Shadcn Button
+```
+
+---
+
+# Product Image
+
+Display:
+
+```ts
+image:"https://..."
+```
+
+Use:
+
+```txt
+next/image
+```
+
+Image behavior:
+
+```txt
+object-cover
+
+responsive
+
+rounded corners
+```
+
+---
+
+If demo images are required:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Do NOT:
+
+* Upload images
+
+* Use local files
+
+* Implement image uploads
+
+---
+
+# Price Section
+
+Display:
+
+```txt
+Price
+
+Discount
+
+Final Price
+```
+
+Example:
+
+```txt
+₹1200
+
+20% OFF
+
+₹960
+```
+
+If discount is:
+
+```txt
+0
+```
+
+Hide discount badge.
+
+---
+
+# Stock Status
+
+Display:
+
+If:
+
+```txt
+stock > 0
+```
+
+Show:
+
+```txt
+In Stock
+```
+
+If:
+
+```txt
+stock === 0
+```
+
+Show:
+
+```txt
+Out of Stock
+```
+
+Disable:
+
+```txt
+Add To Cart button
+```
+
+UI only.
+
+---
+
+# Product Detail Page
+
+Route:
+
+```txt
+/products/[id]
+```
+
+Fetch:
+
+```txt
+GET /api/products/[id]
+```
+
+Display:
+
+```txt
+Large Product Image
+
+Title
+
+Description
+
+Price
+
+Discount
+
+Brand
+
+Cloth Type
+
+Size
+
+Color
+
+Stock
+
+Add To Cart Button
+```
+
+---
+
+# Product Detail Layout
+
+Desktop:
+
+```txt
+Left:
+
+Image
+
+
+Right:
+
+Product Details
+```
+
+Mobile:
+
+```txt
+Image
+
+↓
+
+Details
+```
+
+Responsive.
+
+---
+
+# Add To Cart Button
+
+Create UI only.
+
+Button:
+
+```txt
+Add To Cart
+```
+
+Do NOT:
+
+* Connect API
+
+* Update Redux
+
+* Save cart
+
+* Persist cart
+
+Cart functionality will be implemented in the next phase.
+
+---
+
+# Loading State
+
+While fetching:
+
+Show:
+
+```txt
+Skeleton Loader
+```
+
+Use:
+
+```txt
+Shadcn Skeleton
+```
+
+---
+
+# Error State
+
+If API fails:
+
+Display:
+
+```txt
+Unable to load products
+
+Try again later
+```
+
+If:
+
+```txt
+Product not found
+```
+
+Show:
+
+```txt
+404 Message
+```
+
+Example:
+
+```txt
+Product not found.
+```
+
+---
+
+# Redux Usage
+
+Use:
+
+```txt
+productSlice
+```
+
+Responsibilities:
+
+```txt
+loading
+
+error
+
+products
+
+selectedProduct
+```
+
+Create:
+
+```txt
+fetchProducts
+
+fetchProductById
+```
+
+Use:
+
+```txt
+createAsyncThunk
+```
+
+Do NOT:
+
+* Store cart state
+
+* Store auth state here
+
+---
+
+# Axios Usage
+
+Use:
+
+```txt
+lib/axios.ts
+```
+
+Do not:
+
+```txt
+Hardcode URLs
+```
+
+Use:
+
+```env
+NEXT_PUBLIC_API_URL
+```
+
+---
+
+# Components To Create
+
+Create:
+
+```txt
+components/
+
+ProductCard.tsx
+
+ProductGrid.tsx
+
+ProductSkeleton.tsx
+
+EmptyProducts.tsx
+```
+
+Only create reusable components.
+
+Avoid unnecessary abstractions.
+
+---
+
+# Styling Rules
+
+Use:
+
+```txt
+Tailwind CSS
+
+Shadcn UI
+```
+
+Follow:
+
+```txt
+globals.css
+```
+
+Use existing:
+
+```txt
+.page-container
+
+.card-container
+
+.btn-primary
+
+.section-title
+```
+
+Do NOT:
+
+* Hardcode colors repeatedly
+
+* Add random styles
+
+* Break design consistency
+
+---
+
+# Responsive Rules
+
+Follow:
+
+```txt
+mobile
+
+↓
+
+tablet
+
+↓
+
+desktop
+```
+
+App must be:
+
+✓ Mobile Responsive
+
+✓ Tablet Responsive
+
+✓ Desktop Responsive
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Handle:
+
+```txt
+API Errors
+
+404
+
+Empty Data
+
+Invalid Product ID
+```
+
+---
+
+# Empty Products State
+
+If:
+
+```txt
+products.length === 0
+```
+
+Display:
+
+```txt
+No Products Available
+```
+
+and
+
+```txt
+Please check again later.
+```
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Cart Logic
+
+* Cart API
+
+* Checkout
+
+* Wishlist
+
+* Reviews
+
+* Ratings
+
+* Search
+
+* Product Filters
+
+* Pagination
+
+* Infinite Scroll
+
+* Socket.io
+
+* Stock Alerts
+
+* Real-time updates
+
+Implement ONLY:
+
+Product Listing Page
+
+Product Detail Page
+
+Product UI Components
+
+Redux Product State
+
+---
+
+# Expected Output
+
+After Phase 4:
+
+✓ Product Listing Page
+
+✓ Product Detail Page
+
+✓ Product Card Component
+
+✓ Product Grid
+
+✓ Product Skeleton Loader
+
+✓ Redux Product State
+
+✓ Responsive UI
+
+✓ Error States
+
+✓ Empty States
+
+✓ Add To Cart Button UI
+
+✓ Production Ready Product Frontend
+
+If any requirement is unclear:
+
+Ask the user before implementing.
+
+Never assume.
